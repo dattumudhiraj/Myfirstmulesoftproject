@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="21887630-4de8-4319-b673-33a5581677b7" >
+		<http:listener-connection host="0.0.0.0" port="8083" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="d44fad53-5a4e-4f23-9cd5-544f1553c227" />
+	<flow name="dw.operatorsFlow" doc:id="d7efb55c-1711-4e97-9606-18a8f7bd072b" >
+		<http:listener doc:name="Listener" doc:id="a319e01d-0787-4b05-904e-45a43fbaf457" config-ref="HTTP_Listener_config" path="/readfile" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Logger" doc:id="0f861bf2-1b9f-4c9b-b490-19e45ad4aab1" message="connectors file ftpsftp"/>
+		<file:read doc:name="Read" doc:id="d5e68d57-3469-46fb-a6f8-e87b39daf211" config-ref="File_Config" path="D:\targerlocation\file.connect\file.data.read.txt"/>
+		<ee:transform doc:name="Transform Message" doc:id="19ce9b55-f9ad-43aa-afe2-655957ee0117" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="4e185c6b-8e1c-4f2c-88f2-a29bf5e7887a" message="#[payload]"/>
+	</flow>
+</mule>
